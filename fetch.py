@@ -60,11 +60,15 @@ def fetch_data(offset=0):
         # filter out records with no coordinates
         data = [x for x in data if tuple(x['geometry']['coordinates']) != (0, 0)]  # noqa
 
-        # fix epoch time
         for feature in data:
+
+            # fix epoch time
             timestamp = feature['properties']['CreationDate']
             converted = datetime.datetime.fromtimestamp(timestamp / 1000.0).date().isoformat()  # noqa
             feature['properties']['CreationDate'] = converted
+
+            # don't need super decimal precision
+            feature['geometry']['coordinates'] = [round(x, 5) for x in feature['geometry']['coordinates']]  # noqa
 
         data_features.extend(data)
 
