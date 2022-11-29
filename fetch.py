@@ -57,8 +57,8 @@ def fetch_data(offset=0):
 
     if data:
 
-        # filter out shit record No. 41478
-        data = [x for x in data if x.get('id') != 41478]
+        # filter out records with no coordinates
+        data = [x for x in data if tuple(x['geometry']['coordinates']) != (0, 0)]  # noqa
 
         # fix epoch time
         for feature in data:
